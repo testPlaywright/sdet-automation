@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../Pages/LoginPage');
+const { Locators } = require('../Pages/Locators');
 import * as fs from 'fs/promises';
 
 
@@ -12,24 +12,24 @@ test('Add extracullicular activities', async ({ page }) => {
     test.setTimeout(100000);
     const testData = await loadTestData('user1');
     const activities = testData.extracurricularActivities;
-    const loginPage = new LoginPage(page);
+ const locators = new Locators(page);
     const tempData = JSON.parse(await fs.readFile('./tempEmail.json', 'utf-8'));
 
     await test.step('1.Navigate to the application page', async () => {
-        await loginPage.navigateToNewApplicationPage(testData.applicationPageUrl, tempData.email, testData.password);
-        await loginPage.clickReturnHome();
-        await loginPage.navigateUrl(testData.applicationPageUrl);
-        await loginPage.clickViewApplication();
+        await locators.navigateToNewApplicationPage(testData.applicationPageUrl, tempData.email, testData.password);
+        await locators.clickReturnHome();
+        await locators.navigateUrl(testData.applicationPageUrl);
+        await locators.clickViewApplication();
     });
 
     await test.step('3. Edit the extracullicular activites using the edit button', async () => {
-        await loginPage.editExtracurricularActivities();
+        await locators.editExtracurricularActivities();
     });
 
     await test.step('4. Add one entry and click next page and verify error message', async () => {
         
-        await loginPage.addEntriesForExtraCurricular();
-        await loginPage.fillExtracurricularDetails(
+        await locators.addEntriesForExtraCurricular();
+        await locators.fillExtracurricularDetails(
             activities[0].activity,
             activities[0].years,
             activities[0].leadership,
@@ -37,15 +37,15 @@ test('Add extracullicular activities', async ({ page }) => {
             0,
             0
         );
-        await loginPage.clickNextPageButton();
-        await loginPage.verifyErrorMessage();
+        await locators.clickNextPageButton();
+        await locators.verifyErrorMessage();
     });
 
     await test.step('5. Add remaining activities', async () => {
          
         for (let i = 1; i < activities.length; i++) {
-            await loginPage.addEntriesForExtraCurricular();
-            await loginPage.fillExtracurricularDetails(
+            await locators.addEntriesForExtraCurricular();
+            await locators.fillExtracurricularDetails(
                 activities[i].activity,
                 activities[i].years,
                 activities[i].leadership,
@@ -57,7 +57,7 @@ test('Add extracullicular activities', async ({ page }) => {
     });
 
     await test.step('6. Verify error message is hidden', async () => {
-        await loginPage.verifyErrorMessageHidden();
-         await loginPage.clickNextPageButton();
+        await locators.verifyErrorMessageHidden();
+         await locators.clickNextPageButton();
     });
 });

@@ -1,7 +1,7 @@
 import { context } from "@cucumber/cucumber";
 import { expect, Page } from "@playwright/test";
 
-export class LoginPage {
+export class Locators {
 
 
     [x: string]: any;

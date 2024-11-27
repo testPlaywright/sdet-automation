@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../Pages/LoginPage');
+const { Locators } = require('../Pages/Locators');
 import * as fs from 'fs/promises';
 
 async function loadTestData(user: string) {
@@ -10,14 +10,14 @@ async function loadTestData(user: string) {
 test('Fill out application form with address details', async ({ page }) => {
   test.setTimeout(100000);
   const testData = await loadTestData('user1');
-  const loginPage = new LoginPage(page);
+  const locators = new Locators(page);
   const tempData = JSON.parse(await fs.readFile('./tempEmail.json', 'utf-8'));
   await test.step('1.Navigate to the application page', async () => {
-    await loginPage.navigateToNewApplicationPage(testData.applicationPageUrl,tempData.email,testData.password);
+    await locators.navigateToNewApplicationPage(testData.applicationPageUrl,tempData.email,testData.password);
   });
 
   await test.step('2.Fill all the mandatory address details', async () => {
-    await loginPage.fillAddressDetails(
+    await locators.fillAddressDetails(
       testData.streetAddress,
       testData.state,
       testData.city,
